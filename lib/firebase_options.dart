@@ -17,15 +17,24 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -43,38 +52,11 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCwGI7Sib1OE4T0ooQIhzkWQVxmrg36tNk',
-    appId: '1:316219372562:web:48c88270b5c9f2b27214cb',
-    messagingSenderId: '316219372562',
-    projectId: 'elag-demo',
-    authDomain: 'elag-demo.firebaseapp.com',
-    storageBucket: 'elag-demo.appspot.com',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBflQhn3btWU93SXN0eR4gQkpoSZVxhwAo',
-    appId: '1:316219372562:android:12845e2c611bbc3f7214cb',
-    messagingSenderId: '316219372562',
-    projectId: 'elag-demo',
-    storageBucket: 'elag-demo.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAwCoAwpUT2tWq8nHyPsGKlX53AnssC4IQ',
-    appId: '1:316219372562:ios:a8da64677bc2b1367214cb',
-    messagingSenderId: '316219372562',
-    projectId: 'elag-demo',
-    storageBucket: 'elag-demo.appspot.com',
-    iosBundleId: 'com.example.elag',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAwCoAwpUT2tWq8nHyPsGKlX53AnssC4IQ',
-    appId: '1:316219372562:ios:72299b4c7ded8e497214cb',
-    messagingSenderId: '316219372562',
-    projectId: 'elag-demo',
-    storageBucket: 'elag-demo.appspot.com',
-    iosBundleId: 'com.example.elag.RunnerTests',
+    apiKey: 'AIzaSyD2aIU7OUY-GbL9JebS2WgdVzWMiRUKXrM',
+    appId: '1:775027334861:android:c76a2ad5890c723d15d384',
+    messagingSenderId: '775027334861',
+    projectId: 'elag-6408d',
+    storageBucket: 'elag-6408d.appspot.com',
   );
 }

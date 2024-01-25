@@ -10,12 +10,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
   File? userImgFile;
+
   void getImage() async {
     final pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -155,45 +157,28 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  //
   void login({required String email, required String password}) async {
     emit(LoginLoadingState());
 
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-
-      if (userCredential.user?.uid != null) {
-        CollectionReference patient =
-            FirebaseFirestore.instance.collection('Users');
-
-        QuerySnapshot pUserCollection = await patient.get();
-
-        for (var doc2 in pUserCollection.docs) {
-          var chooseStatus = doc2['chooseStatus'];
-          if ("Patient" == chooseStatus) {
-            final sharedPref = await SharedPreferences.getInstance();
-            await sharedPref.setString('userID', userCredential.user!.uid);
-            Constants.userID = sharedPref.getString('userID');
-            emit(PatientLoginSuccessState());
-          }
-        }
-      }
-      UserCredential userCredential2 = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      if (userCredential.user?.uid != null) {
-        CollectionReference therapist =
-            FirebaseFirestore.instance.collection('Users');
-
-        QuerySnapshot tUserCollection = await therapist.get();
-        for (var doc2 in tUserCollection.docs) {
-          var chooseStatus2 = doc2['chooseStatus'];
-          if ("Therapist" == chooseStatus2) {
-            final sharedPref = await SharedPreferences.getInstance();
-            await sharedPref.setString('userID', userCredential2.user!.uid);
-            Constants.userID = sharedPref.getString('userID');
-            emit(TherapistLoginSuccessState());
-          }
-        }
+      var patient = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userCredential.user?.uid.toString())
+          .get();
+      var chooseStatus = patient.data()!['chooseStatus'];
+      if ("Patient" == chooseStatus) {
+        final sharedPref = await SharedPreferences.getInstance();
+        await sharedPref.setString('userID', userCredential.user!.uid);
+        Constants.userID = sharedPref.getString('userID');
+        emit(PatientLoginSuccessState());
+      } else {
+        final sharedPref = await SharedPreferences.getInstance();
+        await sharedPref.setString('userID', userCredential.user!.uid);
+        Constants.userID = sharedPref.getString('userID');
+        emit(TherapistLoginSuccessState());
       }
     } on FirebaseAuthException {
       emit(FailedToLoginState());
