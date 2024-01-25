@@ -170,6 +170,7 @@ class AuthCubit extends Cubit<AuthState> {
 
         for (var doc2 in pUserCollection.docs) {
           var chooseStatus = doc2['chooseStatus'];
+          print("-------${chooseStatus}");
           if ("Patient" == chooseStatus) {
             final sharedPref = await SharedPreferences.getInstance();
             await sharedPref.setString('userID', userCredential.user!.uid);
