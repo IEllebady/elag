@@ -1,3 +1,4 @@
+import 'package:elag/Models/request_model.dart';
 import 'package:elag/Models/user_model.dart';
 import 'package:elag/controller/cubit/layout_cubit.dart';
 import 'package:elag/therapists/detailes_exercise_screen.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class PatientExerciesScreen extends StatelessWidget {
   final UserModel userModel;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
   PatientExerciesScreen({super.key, required this.userModel});
 
   @override
@@ -15,7 +17,8 @@ class PatientExerciesScreen extends StatelessWidget {
       ..getExercise(receiverID: userModel.id!);
     final layoutCubit = BlocProvider.of<LayoutCubit>(context)
       ..getExreciesData()
-      ..getExreciesList();
+      ..getExreciesList()
+      ..getRequestValidation(doctorID: userModel.id!);
     return Scaffold(
         appBar: AppBar(
             title: Text(userModel.name!),
@@ -29,9 +32,10 @@ class PatientExerciesScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Column(children: [
                 Expanded(
-                    child: state is GetMessagesLoadingState
+                    child: state is GetRequestDataLoadingState
                         ? const Center(child: CircularProgressIndicator())
-                        : cubit.exerciseMessage.isNotEmpty
+                        : layoutCubit.requestStatus == "accept" &&
+                                cubit.exerciseMessage.isNotEmpty
                             ? ListView.builder(
                                 itemCount: cubit.exerciseMessage.length,
                                 itemBuilder: (context, index) {
@@ -68,48 +72,66 @@ class PatientExerciesScreen extends StatelessWidget {
                                     ),
                                   );
                                 })
-                            : const Center(
-                                child: Text("No Exercises yet......"))),
+                            : cubit.exerciseMessage.isEmpty &&
+                                    layoutCubit.requestStatus == "accept"
+                                ? const Center(
+                                    child: Text("No Exercises yet......"))
+                                : layoutCubit.requestStatus == "have doctor"
+                                    ? const Center(
+                                        child: Text("You have Therapist......"))
+                                    : layoutCubit.requestStatus == "pending"
+                                        ? const Center(
+                                            child: Text(
+                                                "Therapist pending you......"))
+                                        : Center(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                layoutCubit.sendRequestToDoctor(
+                                                    doctorID: userModel.id!);
+                                              },
+                                              child: const Text(
+                                                  "send to doctor to add Exercises"),
+                                            ),
+                                          )),
                 const SizedBox(height: 12)
               ]));
         }));
   }
 }
 
-                                    //     FloatingActionButton(
-                                    //   onPressed: () {
-                                    //     layoutCubit.exerciseMessage.removeAt(
-                                    //         index); // Call the function to perform the close action
-                                    //   },
-                                    //   tooltip: 'Close',
-                                    //   child: const Icon(Icons.close),
-                                    // ),
-                                    //  MaterialButton(
-                                        //   onPressed: () {
-                                        //     layoutCubit.exerciseMessage.removeAt(
-                                        //         index); // Call the function to perform the close action
-                                        //   },
-                                        // )
-                                        // floatingActionButton:
+//     FloatingActionButton(
+//   onPressed: () {
+//     layoutCubit.exerciseMessage.removeAt(
+//         index); // Call the function to perform the close action
+//   },
+//   tooltip: 'Close',
+//   child: const Icon(Icons.close),
+// ),
+//  MaterialButton(
+//   onPressed: () {
+//     layoutCubit.exerciseMessage.removeAt(
+//         index); // Call the function to perform the close action
+//   },
+// )
+// floatingActionButton:
 
-                                        ////////////////////////////
+////////////////////////////
 
-
-                                      //////////////////////////
-                                    //   trailing: IconButton(
-                                    //   icon: const Icon(Icons.remove),
-                                    //   onPressed: () {
-                                    //     if (index >= 0 &&
-                                    //         index <
-                                    //             layoutCubit
-                                    //                 .exerciseMessage.length) {
-                                    //       layoutCubit.exerciseMessage
-                                    //           .removeAt(index);
-                                    //       //layoutCubit.exerciseMessage
-                                    //       //  .removeAt(index);
-                                    //     }
-                                    //   },
-                                    // ),
+//////////////////////////
+//   trailing: IconButton(
+//   icon: const Icon(Icons.remove),
+//   onPressed: () {
+//     if (index >= 0 &&
+//         index <
+//             layoutCubit
+//                 .exerciseMessage.length) {
+//       layoutCubit.exerciseMessage
+//           .removeAt(index);
+//       //layoutCubit.exerciseMessage
+//       //  .removeAt(index);
+//     }
+//   },
+// ),
 // import 'package:elag/Models/user_model.dart';
 // import 'package:elag/controller/cubit/layout_cubit.dart';
 // import 'package:elag/therapists/detailes_exercise_screen.dart';

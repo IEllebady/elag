@@ -16,7 +16,7 @@ class TherapistsExercies extends StatelessWidget {
     final layoutCubit = BlocProvider.of<LayoutCubit>(context)
       ..getExreciesData()
       ..getExreciesList();
-    List<bool> isSelected = List.generate(9999999, (index) => false);
+
     List<String> selectedItems = [];
 
     return BlocConsumer<LayoutCubit, LayoutState>(
@@ -136,10 +136,10 @@ class TherapistsExercies extends StatelessWidget {
                                                   : layoutCubit
                                                       .exrecises[index].body!),
                                               trailing: Checkbox(
-                                                  value: isSelected[index],
+                                                  value: layoutCubit.isSelected[index],
                                                   onChanged: (value) {
                                                     //setState(() {
-                                                    isSelected[index] = value!;
+                                                   layoutCubit.checkboxIsSelected(value!, index);
                                                     selectedItems.clear();
                                                     //});
                                                   }));
@@ -148,27 +148,32 @@ class TherapistsExercies extends StatelessWidget {
                                     margin: const EdgeInsets.symmetric(
                                         vertical: 10),
                                     child: TextButton(
-                                        onPressed: () {
+                                        onPressed: () async {
                                           // for (int i = 0;
                                           //     i < isSelected.length;
                                           //     i++) {
                                           //   if (isSelected[i]) {}
                                           // }
-                                          for (int i = 0;
-                                              i < layoutCubit.exrecises.length;
-                                              i++) {
-                                            if (isSelected[i] == true) {
-                                              layoutCubit.sendExercise(
-                                                  title: layoutCubit
-                                                      .exrecises[i].title!,
-                                                  receiverID: userModel.id!,
-                                                  body: layoutCubit
-                                                      .exrecises[i].body!,
-                                                  image: layoutCubit
-                                                      .exrecises[i].image!);
-                                            }
+                                          await layoutCubit.deleteExerciseCollection( userModel.id!).then((value){
+                                            for (int i = 0;
+                                            i < layoutCubit.exrecises.length;
+                                            i++) {
+                                              if (layoutCubit.isSelected[i] == true) {
+                                                print("addd");
+                                                layoutCubit.sendExercise(index: i,
+                                                    title: layoutCubit
+                                                        .exrecises[i].title!,
+                                                    receiverID: userModel.id!,
+                                                    body: layoutCubit
+                                                        .exrecises[i].body!,
+                                                    image: layoutCubit
+                                                        .exrecises[i].image!);
+                                              }
                                           }
-                                        },
+                                          });
+
+                                          }
+                                        ,
                                         style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStateProperty.all(

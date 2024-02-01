@@ -99,7 +99,7 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await FirebaseFirestore.instance
           .collection('Exercise')
-          .doc(exerciseModel.senderID)
+          .doc()
           .set(exerciseModel.toJson());
       emit(SaveExerciseDataOnFirestoreSuccessState());
     } on FirebaseException {

@@ -66,3 +66,11 @@ class FilterTherapistForUserLoadingState extends LayoutState {}
 class FilterTherapistForUserSuccessState extends LayoutState {}
 
 class SuccessRemoveExerciseMessageState extends LayoutState {}
+
+class GetRequestDataLoadingState extends LayoutState {}
+class GetRequestDataSuccessState extends LayoutState {}
+class GetRequestDataFailureState extends LayoutState {}
+
+class DoctorAcceptPatientLoadingState extends LayoutState {}
+class DoctorAcceptPatientSuccessState extends LayoutState {}
+class DoctorAcceptPatientFailureState extends LayoutState {}

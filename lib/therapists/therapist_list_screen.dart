@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class TherabistsListScreen extends StatelessWidget {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  TherabistsListScreen({super.key});
+   TherabistsListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
